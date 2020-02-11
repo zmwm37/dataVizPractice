@@ -1,2 +1,2 @@
 # dataVizPractice
-Having fun with different data visaulizations
+Playing around with different data visaulizations
