@@ -6,7 +6,7 @@ library(ggplot2)
 library(lubridate)
 library(viridis)
 library(ggridges)
-raw <- read.csv(file = '~/Documents/Medical/postSurgeryWeight11092019.csv') %>%
+raw <- read.csv(file = '~/Documents/Medical/postSurgeryWeight12122019.csv') %>%
     select(-Notes)
 
 
@@ -36,7 +36,8 @@ ggplot(data = df, aes(x = pounds.lost, y = reorder(as.factor(weeks.after),-week)
 # duplicate data frame and label week as all so first density plot is of all data
 df.a <- df %>% select(-weeks.after) %>% mutate(weeks.after = 'All Weeks')
 df.all  <- rbind(df.a,df)
-df.all$weeks.after <-factor(df.all$weeks.after, levels = c('6','5','4','3','2','1','0','All Weeks'))
+df.all$weeks.after <-factor(df.all$weeks.after, 
+                            levels = c('11','10','9','8','7','6','5','4','3','2','1','0','All Weeks'))
 
 # arrows for annotations
 curved.arrows <- tibble(
@@ -70,7 +71,7 @@ ggplot(data = df.all, aes(x = pounds.lost,
     geom_curve(data = straight.arrows, aes(x = x1, y = y1, xend = x2, yend = y2),
                arrow = arrow(length = unit(0.07, "inch")), size = 0.4,
                color = "gray20", curvature = 0) +
-    labs(title = "Pounds Lost After Jaw Surgery") +
+    labs(title = "Pounds Lost After Jaw Surgery by Week") +
     xlab("Pounds Lost") +
     ylab("Weeks After Surgery")
 
