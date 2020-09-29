@@ -1,17 +1,17 @@
 <!doctype html>
 
 <html>
- 
+
 <head>
 	<title> D3 tutorial </title>
-	
+
 
 </head>
 
 <body>
-	
+
 	<script src="http://d3js.org/d3.v3.min.js"></script>
-	
+
 	<script>
 
 		// create data
@@ -33,15 +33,15 @@
 		var circle2 = canvas.append("circle")
 					.attr("cx", 50)
 					.attr("cy", 200)
-					.attr("r", 25);		
+					.attr("r", 25);
 
 		var circles = canvas.selectAll("circle")
 							.data(data)
 							.attr("fill","green")
-							.exit()
+							.exit() // exit is the equivalent of enter when # DOM elements > # data elements
 								.attr("fill", "blue") // any DOM elements that don't have data, make them blue
-			
-								
+
+
 
 	</script>
 
