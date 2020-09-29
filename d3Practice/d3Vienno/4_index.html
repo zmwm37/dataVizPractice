@@ -1,0 +1,39 @@
+<!doctype html>
+
+<html>
+ 
+<head>
+	<title> D3 tutorial </title>
+	
+
+</head>
+
+<body>
+	
+	<script src="http://d3js.org/d3.v3.min.js"></script>
+	
+	<script>
+
+		var dataArray = [20, 30, 40]; 	
+
+
+		var canvas = d3.select("body") //assigning to variable canvas
+			.append("svg")
+			.attr("width", 500)
+			.attr("height", 500);
+
+		// make simple bar chart from data
+		var bars = canvas.selectAll("rect") // return empty selection
+			.data(dataArray) // then bind data onto empty selection
+			.enter() // enter method returns placeholders for each data element for which there are no elements on the page
+				.append("rect") // add rectangle for each data element
+				.attr("width", function(d) { return d*10;})
+				.attr("height", 50)
+				.attr("y", function(d, i) { return i*100})
+				.attr("fill", "red");
+				
+	</script>
+
+</body>
+
+</html>

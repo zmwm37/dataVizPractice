@@ -1,0 +1,50 @@
+<!doctype html>
+
+<html>
+ 
+<head>
+	<title> D3 tutorial </title>
+	
+
+</head>
+
+<body>
+	
+	<script src="http://d3js.org/d3.v3.min.js"></script>
+	
+	<script>
+
+		var dataArray = [20, 30, 40, 60]; 	// value in array bigger than container!
+
+		//set up scale to take input range and transform to fit in container
+		var width = 500
+		var height = 500
+
+		var widthScale = d3.scale.linear() // scale method
+							.domain([0, 60])
+							.range([0,width]);
+
+		var colorScale  = d3.scale.linear()
+							.domain([0,60])
+							.range(["red","blue"]);
+
+		var canvas = d3.select("body") //assigning to variable canvas
+			.append("svg")
+			.attr("width", width)
+			.attr("height", height);
+
+		// make simple bar chart from data
+		var bars = canvas.selectAll("rect") // return empty selection
+			.data(dataArray) // then bind data onto empty selection
+			.enter() // enter method returns placeholders for each data element for which there are no elements on the page
+				.append("rect") // add rectangle for each data element
+				.attr("width", function(d) { return widthScale(d);}) // scale transforms datum
+				.attr("height", 50)
+				.attr("y", function(d, i) { return i * 100})
+				.attr("fill", function(d) { return colorScale(d)});
+
+	</script>
+
+</body>
+
+</html>

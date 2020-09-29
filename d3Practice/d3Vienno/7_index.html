@@ -1,0 +1,50 @@
+<!doctype html>
+
+<html>
+ 
+<head>
+	<title> D3 tutorial </title>
+	
+
+</head>
+
+<body>
+	
+	<script src="http://d3js.org/d3.v3.min.js"></script>
+	
+	<script>
+
+		// create data
+		var data = [10];
+
+		//
+		var canvas = d3.select("body")
+						.append("svg")
+						.attr("width", 500)
+						.attr("height", 500);
+
+		//DOM element #1
+		var circle1 = canvas.append("circle")
+							.attr("cx", 50)
+							.attr("cy", 100)
+							.attr("r", 25);
+
+		//DOM element #2
+		var circle2 = canvas.append("circle")
+					.attr("cx", 50)
+					.attr("cy", 200)
+					.attr("r", 25);		
+
+		var circles = canvas.selectAll("circle")
+							.data(data)
+							.attr("fill","green")
+							.exit()
+								.attr("fill", "blue") // any DOM elements that don't have data, make them blue
+			
+								
+
+	</script>
+
+</body>
+
+</html>
