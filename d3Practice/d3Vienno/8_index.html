@@ -1,0 +1,43 @@
+<!doctype html>
+
+<html>
+
+<head>
+	<title> D3 tutorial 8 - Transitions </title>
+
+
+</head>
+
+<body>
+
+	<script src="http://d3js.org/d3.v3.min.js"></script>
+
+	<script>
+
+		var canvas = d3.select("body")
+            .append("svg")
+            .attr("width", 500)
+            .attr("height", 500);
+
+    var circle = canvas.append("circle")
+            .attr("cx", 50)
+            .attr("cy", 50)
+            .attr("r", 25);
+
+    // transition
+    circle.transition()
+            .duration(1500) // duration of transition
+            .delay(2000) // delay before transition
+            .attr("cx",100)
+            .attr("cy",100)
+            .transition() // second transition
+            .attr("cy",25)
+            .each("end", function() { d3.select(this). attr("fill", "red") })
+                // .each is an EVENT LISTENER, "end" refers to end of transition
+                // "this" in anon function refers to element in use
+                // "start" can also be used instead of "end"
+
+	</script>
+
+</body>
+</html>

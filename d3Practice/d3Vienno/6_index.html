@@ -1,17 +1,17 @@
 <!doctype html>
 
 <html>
- 
+
 <head>
-	<title> D3 tutorial </title>
-	
+	<title> D3 tutorial 6 </title>
+
 
 </head>
 
 <body>
-	
+
 	<script src="http://d3js.org/d3.v3.min.js"></script>
-	
+
 	<script>
 
 		var dataArray = [20, 30, 40, 60]; 	// value in array bigger than container!
@@ -30,14 +30,14 @@
 
 		var axis = d3.svg.axis() // create axis
 					.ticks(5) //specify # of ticks
-					.scale(widthScale); 
+					.scale(widthScale);
 
 		// define svg space
 		var canvas = d3.select("body") //assigning to variable canvas
 			.append("svg")
 			.attr("width", width)
 			.attr("height", height)
-			.append("g") //group all elements in variable canvas 
+			.append("g") //group all elements in variable canvas
 			.attr("transform","translate(50, 50)"); // move group 50 pixels right and down
 
 		// make simple bar chart from data
