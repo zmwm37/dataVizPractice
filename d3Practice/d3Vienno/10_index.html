@@ -10,6 +10,10 @@
 
 <body>
 
+	<div>
+		<h2> <b> Iris Practice </b> </h2>
+	</div>
+
 	<script src="http://d3js.org/d3.v3.min.js"></script>
 
 	<script>
@@ -42,6 +46,26 @@
 							.attr("fill", "white")
 							.attr("y", function(d,i) {return i * 100 + 45; })
 							.text(function(d) { return d.rowname ;})
+
+			// transition
+	    canvas.selectAll("rect")
+					.transition()
+          .duration(1500) // duration of transition
+          .delay(3000) // delay before transition
+					.attr("width", function(d){ return d.versicolor * 100; })
+          .each("end", function() { d3.select(this). attr("fill", "purple") })
+					.transition() // transition #2
+          .duration(1500) // duration of transition
+          .delay(7500) // delay before transition
+					.attr("width", function(d){ return d.virginica * 100; })
+          .each("end", function() { d3.select(this). attr("fill", "fuchsia") })
+					.transition() // transition #3
+					.duration(1500) // duration of transition
+					.delay(12000) // delay before transition
+					.attr("width", function(d){ return d.setosa * 100; })
+					.each("end", function() { d3.select(this). attr("fill", "blue") })
+
+
 
 		})
 

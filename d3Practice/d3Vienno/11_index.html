@@ -1,0 +1,52 @@
+<!doctype html>
+
+<html>
+
+<head>
+
+	<title> D3 tutorial 11 - Paths </title>
+
+</head>
+
+<body>
+
+	<script src="http://d3js.org/d3.v3.min.js"></script>
+
+	<script>
+
+	var canvas = d3.select("body").append("svg")
+			.attr("width", 500)
+			.attr("height", 500);
+
+	// create array
+	var data = [
+					{x: 10, y: 20},
+					{x: 40, y: 60},
+					{x: 50, y: 70},
+					{x: 60, y: 10},
+					{x: 70, y: 5}
+
+	];
+
+	// create group element, transform so we can see it
+	var group = canvas.append("g")
+			.attr("transform", "translate(100, 100)");
+
+	var line = d3.svg.line()
+			.x(function (d) { return d.x; })
+			.y(function (d) { return d.y; });
+
+	// bind data to the path
+	group.selectAll("path") // bind data to empty selection
+			.data([data]) // pass in data as an array
+			.enter()
+			.append("path") // since data passed in as an array, only create one path
+					.attr("d",line) // refer to path generator from d3
+					.attr("fill", "none")
+					.attr("stroke", "black")
+					.attr("stroke-width", 10);
+
+	</script>
+
+</body>
+</html>
