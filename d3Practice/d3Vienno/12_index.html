@@ -1,0 +1,51 @@
+<!doctype html>
+
+<html>
+
+<head>
+
+	<title> D3 tutorial 12 - Arcs </title>
+
+</head>
+
+<body>
+
+	<script src="http://d3js.org/d3.v3.min.js"></script>
+
+	<script>
+
+	var canvas = d3.select("body").append("svg")
+			.attr("width", 500)
+			.attr("height", 500);
+
+	// create array
+	var data = [
+					{x: 10, y: 20},
+					{x: 40, y: 60},
+					{x: 50, y: 70},
+					{x: 60, y: 10},
+					{x: 70, y: 5}
+
+	];
+
+	// create group element, transform so we can see it
+	var group = canvas.append("g")
+			.attr("transform", "translate(100, 100)");
+
+	var r = 100
+	var p = Math.PI * 2
+
+	// create arc
+	var arc = d3.svg.arc()
+			.innerRadius(r-20)
+			.outerRadius(r)
+			.startAngle(0)
+			.endAngle(p) // not in degrees, mesasured in radians
+
+	group.append("path")
+			.attr("d",arc) // create path using "arc" var
+
+	</script>
+
+</body>
+</html>
