@@ -1,0 +1,105 @@
+<!-- Load d3.js -->
+
+<script src="https://d3js.org/d3.v4.js"></script>
+<script src="https://d3js.org/d3-scale-chromatic.v1.min.js"></script>
+
+<!-- Create a div where the graph will take place -->
+<div id="my_dataviz"></div>
+
+<script>
+
+// set the dimensions and margins of the graph
+var margin = {top: 60, right: 230, bottom: 50, left: 50},
+    width = 660 - margin.left - margin.right,
+    height = 400 - margin.top - margin.bottom;
+
+// append the svg object to the body of the page
+var svg = d3.select("#my_dataviz")
+  .append("svg")
+    .attr("width", width + margin.left + margin.right)
+    .attr("height", height + margin.top + margin.bottom)
+  .append("g")
+    .attr("transform",
+          "translate(" + margin.left + "," + margin.top + ")");
+
+// Parse the Data
+d3.csv("dummyStackedDataWide.csv", function(data) {
+
+
+  //////////
+  // GENERAL //
+  //////////
+
+  // List of groups = header of the csv files
+  var keys = data.columns.slice(1)
+
+  // color palette
+  var color = d3.scaleOrdinal()
+    .domain(keys)
+    .range(["red","yellow","lightblue","blue"])
+    //.range(d3.schemeSet2); // from color palette loaded above
+
+  //stack the data?
+  var stackedData = d3.stack()
+    .keys(keys)
+    (data)
+
+
+
+  //////////
+  // AXIS //
+  //////////
+
+  // Add X axis
+  var x = d3.scaleLinear()
+    .domain(d3.extent(data, function(d) { return d.year; }))
+    .range([ 0, width ]);
+  var xAxis = svg.append("g")
+    .attr("transform", "translate(0," + height + ")")
+    .call(d3.axisBottom(x).ticks(5))
+
+  // Add X axis label:
+  svg.append("text")
+      .attr("text-anchor", "end")
+      .attr("x", width)
+      .attr("y", height+40 )
+      .text("Time (year)");
+
+  // Add Y axis label:
+  svg.append("text")
+      .attr("text-anchor", "end")
+      .attr("x", 0)
+      .attr("y", -20 )
+      .text("count")
+      .attr("text-anchor", "start")
+
+  // Add Y axis
+  var y = d3.scaleLinear()
+    .domain([0, 3500])
+    .range([ height, 0 ]);
+  svg.append("g")
+    .call(d3.axisLeft(y).ticks(5))
+
+    // Create the scatter variable: where both the circles and the brush take place
+   var areaChart = svg.append('g')
+     .attr("clip-path", "url(#clip)")
+
+   // Area generator
+   var area = d3.area()
+     .x(function(d) { return x(d.data.year); })
+     .y0(function(d) { return y(d[0]); })
+     .y1(function(d) { return y(d[1]); })
+
+   // Show the areas
+   areaChart
+     .selectAll("mylayers")
+     .data(stackedData)
+     .enter()
+     .append("path")
+       .attr("class", function(d) { return "myArea " + d.key })
+       .style("fill", function(d) { return color(d.key); })
+       .attr("d", area)
+
+  })
+
+ </script>
