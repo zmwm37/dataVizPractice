@@ -4,6 +4,35 @@
 
 <head>
   <title> D3 Treemap</title>
+
+  <style>
+  #tooltip {
+    position: absolute;
+    width: 220px;
+    height: auto;
+    padding: 10px;
+    background-color: white;
+    -webkit-border-radius: 10px;
+    -moz-border-radius: 10px;
+    border-radius: 10px;
+    -webkit-box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.4);
+    -moz-box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.4);
+    box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.4);
+    pointer-events: none;
+  }
+
+  #tooltip.hidden {
+    display: none;
+  }
+
+  #tooltip p {
+    margin: 0;
+    font-family: sans-serif;
+    font-size: 16px;
+    line-height: 20px;
+  }
+  </style>
+
 </head>
 
 <body>
@@ -16,6 +45,8 @@
 
   <!-- Treemap Code -->
   <script>
+  // treemap example: https://bl.ocks.org/mbostock/2838bf53e0e65f369f476afd653663a2
+  // tree tooltip example: http://bl.ocks.org/tgk/6044254
 
   // set margins
   var margin = {top: 10, right: 10, bottom: 10, left: 10},
@@ -29,32 +60,41 @@
     .append("g")
       .attr("transform","translate(" + margin.left+ "," + margin.top + ") ");
 
+  // rollup data
+  var nest = d3.nest()
+    .key(function(row) { return row.parent; })
+    .key(function(row) { return row.name; })
+    .rollup(function(d) { return d3.sum(d, function(d) {return d.value; });  });
+
+
   // read data from d3 example
   //d3.csv('https://raw.githubusercontent.com/holtzy/D3-graph-gallery/master/DATA/data_hierarchy_1level.csv', function(data) {
 
   // read dummy data I created
-  d3.csv('treemapDummyData.csv', function(data) { // one observation for each link
+  d3.csv('treemapDummyData.csv', function(data) { // multiple observations per link, no unique row for parent required
 
   // create color scale
   var colorScale = d3.scaleOrdinal()
     .domain(["A", "B"])
     .range(["red","blue"])
 
+
+
   // stratify the data: turn links from parent-child into a tree
-  var root = d3.stratify()
-    .id(function(d) { return d.name;})
-    .parentId(function(d) { return d.parent; })
-    (data);
-  root.sum(function(d) { return +d.value })
+  var root = d3.hierarchy({values: nest.entries(data)}, function(d) { return d.values; })
+        .sum(function(d) { return d.value; })
+        .sort(function(a, b) { return b.value - a.value; }); // sorts data so biggest leaves in top left
+
+  console.log(root.leaves())
 
   // compute position of each element in the tree hierarchy
   d3.treemap()
     .size([width, height])
     .padding(4)
-    (root)
+    (root);
 
   // look at the root.leaves() object in console
-  console.log(root.leaves())
+  //console.log(root.leaves())
 
   // add rectangles
   svg.selectAll("rect")
@@ -66,7 +106,23 @@
       .attr('width', function (d) { return d.x1 - d.x0;})
       .attr('height', function (d) {return d.y1 - d.y0; })
       .style("stroke","black")
-      .style("fill", function (d) { return colorScale(d.data.parent) })
+      .style("fill", function (d) { return colorScale(d.parent.data.key) })
+      .on("mousemove", function (d) {
+        var xPosition = d3.event.pageX + 5;
+        var yPosition = d3.event.pageY + 5;
+
+        d3.select("#tooltip")
+          .style("left", xPosition + "px")
+          .style("top", yPosition + "px");
+        d3.select("#tooltip #heading")
+          .text(d.parent.data.key + "-" + d.data.key + "-" + d.data.value); // break this out
+        d3.select("#tooltip").classed("hidden", false);
+      })
+      .on("mouseout", function(d) {
+        d3.select("#tooltip").classed("hidden", true);
+   });
+
+
 
   // add text labels
   svg.selectAll("text")
@@ -75,8 +131,14 @@
     .append("text")
       .attr("x", function(d) { return d.x0 + 10; }) // text needs to be pushed right
       .attr("y", function(d) { return d.y0 + 20; }) // text needs to be pushed down
-      .text(function(d) { return d.data.name; })
+      .text(function(d) { return d.data.key; })
   })
   </script>
+
+  <div id="tooltip" class="hidden">
+    <p><strong id="heading"></strong></p>
+    <p><span id="percentage"></span></p>
+    <p><span id="revenue"></span></p>
+  </div>
 
 </body>
