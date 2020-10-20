@@ -20,7 +20,7 @@
   // set margins
   var margin = {top: 10, right: 10, bottom: 10, left: 10},
     width = 500 - margin.left - margin.right,
-    height = 500 - margin.top - margin.bottom;
+    height = 500 - margin.top - margin.bottom; // groups stack to fit h + w
 
   var svg = d3.select("#viz")
     .append("svg")
@@ -33,7 +33,7 @@
   //d3.csv('https://raw.githubusercontent.com/holtzy/D3-graph-gallery/master/DATA/data_hierarchy_1level.csv', function(data) {
 
   // read dummy data I created
-  d3.csv('treemapDummyData.csv', function(data) {
+  d3.csv('treemapDummyData.csv', function(data) { // one observation for each link
 
   // create color scale
   var colorScale = d3.scaleOrdinal()
