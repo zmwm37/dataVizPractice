@@ -29,8 +29,16 @@
     .append("g")
       .attr("transform","translate(" + margin.left+ "," + margin.top + ") ");
 
-  // read data
-  d3.csv('https://raw.githubusercontent.com/holtzy/D3-graph-gallery/master/DATA/data_hierarchy_1level.csv', function(data) {
+  // read data from d3 example
+  //d3.csv('https://raw.githubusercontent.com/holtzy/D3-graph-gallery/master/DATA/data_hierarchy_1level.csv', function(data) {
+
+  // read dummy data I created
+  d3.csv('treemapDummyData.csv', function(data) {
+
+  // create color scale
+  var colorScale = d3.scaleOrdinal()
+    .domain(["A", "B"])
+    .range(["red","blue"])
 
   // stratify the data: turn links from parent-child into a tree
   var root = d3.stratify()
@@ -44,6 +52,7 @@
     .size([width, height])
     .padding(4)
     (root)
+
   // look at the root.leaves() object in console
   console.log(root.leaves())
 
@@ -55,9 +64,9 @@
       .attr('x', function(d) {return d.x0; })
       .attr('y', function(d) { return d.y0; })
       .attr('width', function (d) { return d.x1 - d.x0;})
-      .attr('height', function (d) {return d.y1 - d.y0})
+      .attr('height', function (d) {return d.y1 - d.y0; })
       .style("stroke","black")
-      .style("fill", "green")
+      .style("fill", function (d) { return colorScale(d.data.parent) })
 
   // add text labels
   svg.selectAll("text")
