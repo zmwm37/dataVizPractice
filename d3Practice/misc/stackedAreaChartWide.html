@@ -39,16 +39,12 @@ d3.csv("dummyStackedDataWide.csv", function(data) {
     .range(["red","yellow","lightblue","blue"])
     //.range(d3.schemeSet2); // from color palette loaded above
 
-  //stack the data?
+  //stack the data
   var stackedData = d3.stack()
     .keys(keys)
     (data)
 
-
-
-  //////////
-  // AXIS //
-  //////////
+  // CREATE AXIS//
 
   // Add X axis
   var x = d3.scaleLinear()
@@ -99,6 +95,49 @@ d3.csv("dummyStackedDataWide.csv", function(data) {
        .attr("class", function(d) { return "myArea " + d.key })
        .style("fill", function(d) { return color(d.key); })
        .attr("d", area)
+
+
+  // What to do when one group is hovered
+  var highlight = function(d){
+    console.log(d)
+    // reduce opacity of all groups
+    d3.selectAll(".myArea").style("opacity", .1)
+    // expect the one that is hovered
+    d3.select("."+d).style("opacity", 1)
+  }
+
+  // And when it is not hovered anymore
+  var noHighlight = function(d){
+    d3.selectAll(".myArea").style("opacity", 1)
+  }
+
+  // Add one dot in the legend for each name.
+var size = 20
+svg.selectAll("myrect")
+  .data(keys)
+  .enter()
+  .append("rect")
+    .attr("x", 400)
+    .attr("y", function(d,i){ return 10 + i*(size+5)}) // 100 is where the first dot appears. 25 is the distance between dots
+    .attr("width", size)
+    .attr("height", size)
+    .style("fill", function(d){ return color(d)})
+    .on("mouseover", highlight)
+    .on("mouseleave", noHighlight)
+
+// Add one dot in the legend for each name.
+svg.selectAll("mylabels")
+  .data(keys)
+  .enter()
+  .append("text")
+    .attr("x", 400 + size*1.2)
+    .attr("y", function(d,i){ return 10 + i*(size+5) + (size/2)}) // 100 is where the first dot appears. 25 is the distance between dots
+    .style("fill", function(d){ return color(d)})
+    .text(function(d){ return d})
+    .attr("text-anchor", "left")
+    .style("alignment-baseline", "middle")
+    .on("mouseover", highlight)
+    .on("mouseleave", noHighlight)
 
   })
 

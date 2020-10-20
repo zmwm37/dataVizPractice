@@ -1,0 +1,73 @@
+<!doctype html>
+
+<html>
+
+<head>
+  <title> D3 Treemap</title>
+</head>
+
+<body>
+<!-- Load d3.js -->
+<script src="https://d3js.org/d3.v4.js"></script>
+
+  <div id = 'viz'>
+
+  </div>
+
+  <!-- Treemap Code -->
+  <script>
+
+  // set margins
+  var margin = {top: 10, right: 10, bottom: 10, left: 10},
+    width = 500 - margin.left - margin.right,
+    height = 500 - margin.top - margin.bottom;
+
+  var svg = d3.select("#viz")
+    .append("svg")
+      .attr("width", width + margin.left + margin.right)
+      .attr("height", height + margin.top + margin.bottom)
+    .append("g")
+      .attr("transform","translate(" + margin.left+ "," + margin.top + ") ");
+
+  // read data
+  d3.csv('https://raw.githubusercontent.com/holtzy/D3-graph-gallery/master/DATA/data_hierarchy_1level.csv', function(data) {
+
+  // stratify the data: turn links from parent-child into a tree
+  var root = d3.stratify()
+    .id(function(d) { return d.name;})
+    .parentId(function(d) { return d.parent; })
+    (data);
+  root.sum(function(d) { return +d.value })
+
+  // compute position of each element in the tree hierarchy
+  d3.treemap()
+    .size([width, height])
+    .padding(4)
+    (root)
+  // look at the root.leaves() object in console
+  console.log(root.leaves())
+
+  // add rectangles
+  svg.selectAll("rect")
+    .data(root.leaves())
+    .enter()
+    .append("rect")
+      .attr('x', function(d) {return d.x0; })
+      .attr('y', function(d) { return d.y0; })
+      .attr('width', function (d) { return d.x1 - d.x0;})
+      .attr('height', function (d) {return d.y1 - d.y0})
+      .style("stroke","black")
+      .style("fill", "green")
+
+  // add text labels
+  svg.selectAll("text")
+    .data(root.leaves())
+    .enter()
+    .append("text")
+      .attr("x", function(d) { return d.x0 + 10; }) // text needs to be pushed right
+      .attr("y", function(d) { return d.y0 + 20; }) // text needs to be pushed down
+      .text(function(d) { return d.data.name; })
+  })
+  </script>
+
+</body>
